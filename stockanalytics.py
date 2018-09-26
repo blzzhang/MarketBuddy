@@ -5,8 +5,33 @@ import pandas_datareader.data as web
 import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt 
 from matplotlib import style
+from keras.layers.core import Dense, Activation, Dropout
+from keras.layers.recurrent import LSTM
+from keras.models import Sequential
+import lstm
 
 style.use('ggplot')
+
+
+def predict(batch, dropout):
+    x_train, y_train, x_test, y_test = lstm.load_data('S&P500_5YR.csv',50,True)
+    
+    model = Sequential()
+    model.add(LSTM(input_dum = 1, output_dim = 50, return_sequences=True))
+    model.add(Dropout(dropout))
+    model.add(LSTM(100,return_sequences=False))
+    model.add(Dropout(dropout))
+    model.add(Dense(output_dim=1))
+    model.add(Activation('linear'))
+    model.compile(loss = 'mse', optimizer = 'rmsprop')
+    
+    model.fit(x_train,y_train,batch_size=batch, nb_epoch = 1, validation_split = 0.05)
+    
+    
+    predict = lstm.predict_sequence_multiple(model, x_test, 50, 50)
+    lstm.plot_results_multiple(predict, y_test, 50)
+
+
 
 def hist_perf(ticker, start, end):
     tickers = [ticker, 'SPY']
@@ -81,9 +106,7 @@ def beta_hedge(tickers_portfolio, start, end):
     plt.legend(prop={'size':20})
     print('Portfolio Hedge Chart')
     plt.show()
-    
-    
-    
+        
 
 start = dt.datetime(2016,1,1)
 end = dt.datetime(2016, 12, 31)
@@ -92,11 +115,10 @@ tickers = ['AMZN','GOOG','SLF']
 weighted_tickers = {'AMZN': 20, 'GOOG': 40, 'SLF': 40}
 
 
-#daily_return = get_return(tickers, start, end, log_return=True)
-
-#daily_return.head()
-
-#hist_perf('AAPL',dt.datetime(2016,1,1),dt.datetime(2016,12,31))
+hist_perf('AAPL',dt.datetime(2016,1,1),dt.datetime(2016,12,31))
 beta_hedge(weighted_tickers,start,end)
 
+predict(612,0.4)
+
 #if __name__=="__main__":
+

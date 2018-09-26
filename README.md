@@ -1,6 +1,6 @@
 # MarketBuddy
 
-##Modules
+## Modules
 
 * Pandas
 * Keras

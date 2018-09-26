@@ -14,7 +14,7 @@ style.use('ggplot')
 
 
 def predict(batch, dropout):
-    x_train, y_train, x_test, y_test = lstm.load_data('S&P500_5YR.csv',50,True)
+    x_train, y_train, x_test, y_test = lstm.load_data('SP500_5YR.csv',50,True)
     
     model = Sequential()
     model.add(LSTM(input_dum = 1, output_dim = 50, return_sequences=True))

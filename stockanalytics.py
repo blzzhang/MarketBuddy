@@ -17,7 +17,7 @@ def predict(batch, dropout):
     x_train, y_train, x_test, y_test = lstm.load_data('SP500_5YR.csv',50,True)
     
     model = Sequential()
-    model.add(LSTM(input_dum = 1, output_dim = 50, return_sequences=True))
+    model.add(LSTM(input_dim = 1, output_dim = 50, return_sequences=True))
     model.add(Dropout(dropout))
     model.add(LSTM(100,return_sequences=False))
     model.add(Dropout(dropout))
